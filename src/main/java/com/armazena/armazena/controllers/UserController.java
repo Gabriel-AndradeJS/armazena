@@ -24,4 +24,14 @@ public class UserController {
     public UserResponseDTO createUser(@RequestBody UserRequestDTO userDTO) {
         return userServices.createUser(userDTO);
     }
+
+    @PutMapping("/{id}")
+    public UserResponseDTO updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userDTO) {
+        return userServices.updateUser(id, userDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteAllUsers(@PathVariable Long id) {
+        userServices.deleteUser(id);
+    }
 }
