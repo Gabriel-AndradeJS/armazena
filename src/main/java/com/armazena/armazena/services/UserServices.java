@@ -5,9 +5,11 @@ import com.armazena.armazena.DTOs.UserDTO.UserResponseDTO;
 import com.armazena.armazena.entities.user.User;
 import com.armazena.armazena.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServices {
@@ -44,5 +46,43 @@ public class UserServices {
         );
         return userResponseDTO;
 
+    }
+
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
+        User user = repository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+
+        if (userDTO.name() != null) {
+            user.setName(userDTO.name());
+        }
+
+        if (userDTO.email() != null) {
+            user.setEmail(userDTO.email());
+        }
+
+        if (userDTO.password() != null) {
+            user.setPassword(userDTO.password());
+        }
+
+        User userUpdated = repository.save(user);
+
+        UserResponseDTO userResponseDTO = new UserResponseDTO(
+                userUpdated.getId(),
+                userUpdated.getName(),
+                userUpdated.getEmail(),
+                userUpdated.getCreatedAt(),
+                userUpdated.getUpdateAt()
+        );
+        return userResponseDTO;
+    }
+
+    public ResponseEntity<Void> deleteUser(Long id) {
+        User user = repository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
