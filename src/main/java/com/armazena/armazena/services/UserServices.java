@@ -30,6 +30,21 @@ public class UserServices {
                 .toList();
     }
 
+    public UserResponseDTO getUserById(Long id) {
+        User user = repository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+
+        UserResponseDTO userResponseDTO = new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdateAt()
+        );
+        return userResponseDTO;
+    }
+
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
         User user = new User();
         user.setName(userDTO.name());
