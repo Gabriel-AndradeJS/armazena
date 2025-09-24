@@ -7,6 +7,6 @@ public record UserResponseDTO(
         String name,
         String email,
         LocalDateTime createdAt,
-        LocalDateTime updateAt
+        LocalDateTime updatedAt
 ) {
 }
