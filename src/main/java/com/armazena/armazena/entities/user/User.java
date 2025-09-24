@@ -1,5 +1,6 @@
 package com.armazena.armazena.entities.user;
 
+import com.armazena.armazena.entities.Product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +30,9 @@ public class User {
     private String email;
 
     private String password;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Product> product;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
