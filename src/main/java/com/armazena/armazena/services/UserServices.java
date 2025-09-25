@@ -2,20 +2,27 @@ package com.armazena.armazena.services;
 
 import com.armazena.armazena.DTOs.UserDTO.UserRequestDTO;
 import com.armazena.armazena.DTOs.UserDTO.UserResponseDTO;
+import com.armazena.armazena.config.JWTConfigToken;
 import com.armazena.armazena.entities.user.User;
 import com.armazena.armazena.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServices {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private JWTConfigToken createJWT;
 
     public List<UserResponseDTO> getUsers() {
         List<User> users = repository.findAll();
@@ -24,6 +31,7 @@ public class UserServices {
                         user.getId(),
                         user.getName(),
                         user.getEmail(),
+                        user.getProduct(),
                         user.getCreatedAt(),
                         user.getUpdateAt()
                 ))
@@ -39,6 +47,7 @@ public class UserServices {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
+                user.getProduct(),
                 user.getCreatedAt(),
                 user.getUpdateAt()
         );
@@ -46,16 +55,18 @@ public class UserServices {
     }
 
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
+        String senhaHash = bCryptPasswordEncoder.encode(userDTO.password());
         User user = new User();
         user.setName(userDTO.name());
         user.setEmail(userDTO.email());
-        user.setPassword(userDTO.password());
+        user.setPassword(senhaHash);
         User userSaved = repository.save(user);
 
         UserResponseDTO userResponseDTO = new UserResponseDTO(
                 userSaved.getId(),
                 userSaved.getName(),
                 userSaved.getEmail(),
+                userSaved.getProduct(),
                 userSaved.getCreatedAt(),
                 userSaved.getUpdateAt()
         );
@@ -86,6 +97,7 @@ public class UserServices {
                 userUpdated.getId(),
                 userUpdated.getName(),
                 userUpdated.getEmail(),
+                userUpdated.getProduct(),
                 userUpdated.getCreatedAt(),
                 userUpdated.getUpdateAt()
         );
