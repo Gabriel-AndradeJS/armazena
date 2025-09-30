@@ -2,6 +2,8 @@ package com.armazena.armazena.entities.Product;
 
 import com.armazena.armazena.DTOs.ProductDTO.ProductRequestDTO;
 import com.armazena.armazena.entities.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +35,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private User user;
 
     @CreationTimestamp
